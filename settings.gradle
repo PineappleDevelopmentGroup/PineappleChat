@@ -1,0 +1,17 @@
+rootProject.name = 'PineappleChat'
+
+gradle.rootProject {
+    it.version = '1.0.0-SNAPSHOT'
+    it.group = 'sh.miles'
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    }
+}
+
+include 'pineapplechat-core'
+include 'pineapplechat-bungee'
+

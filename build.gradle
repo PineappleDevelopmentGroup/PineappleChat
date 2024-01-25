@@ -1,0 +1,90 @@
+plugins {
+    id 'java'
+    id 'checkstyle'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'io.freefair.aggregate-javadoc-jar' version '8.4'
+}
+
+jar.enabled = true
+
+dependencies {
+    implementation project(':pineapplechat-core')
+    implementation project(':pineapplechat-bungee')
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'io.freefair.aggregate-javadoc-jar'
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+
+        compileOnly 'org.jetbrains:annotations-java5:24.0.1'
+    }
+
+    test {
+        useJUnitPlatform()
+
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standard_out'
+            showStandardStreams = true
+        }
+    }
+
+    checkstyle {
+        toolVersion '10.12.5'
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        ignoreFailures = false
+        showViolations = true
+        sourceSets = [project.sourceSets.main]
+    }
+
+
+    checkstyleMain {
+        source = 'src/main/java'
+    }
+
+    publishing {
+        publications {
+            shadow(MavenPublication) { publication ->
+                project.shadow.component(publication)
+                publication.artifact(aggregateJavadocJar)
+
+                repositories {
+                    maven {
+                        url = 'https://maven.miles.sh/libraries'
+                        credentials {
+                            username = System.getenv('PINEAPPLE_REPOSILITE_USERNAME')
+                            password = System.getenv('PINEAPPLE_REPOSILITE_PASSWORD')
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    shadowJar {
+        archiveClassifier.set('')
+        archiveVersion.set('')
+    }
+
+    build {
+        dependsOn shadowJar
+    }
+
+    aggregateJavadoc.options {
+        addStringOption('Xdoclint:none', '-quiet')
+        links(
+                'https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1',
+        )
+    }
+}
+
+
+
+
+
