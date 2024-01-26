@@ -2,9 +2,16 @@ package sh.miles.pineapple.chat.bungee.builder;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.KeybindComponent;
+import net.md_5.bungee.api.chat.ScoreComponent;
+import net.md_5.bungee.api.chat.SelectorComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
+import net.md_5.bungee.api.chat.hover.content.Content;
 import org.jetbrains.annotations.NotNull;
 import sh.miles.pineapple.chat.builder.TextBuilder;
+import sh.miles.pineapple.chat.bungee.tag.HoverEventTag;
 
 import java.awt.Color;
 import java.util.List;
@@ -80,6 +87,34 @@ public class BungeeTextBuilder implements TextBuilder<BaseComponent> {
     @Override
     public TextBuilder<BaseComponent> translation(final String key) {
         builder.append(new TranslatableComponent(key), BungeeComponentBuilder.FormatRetention.NONE);
+        return this;
+    }
+
+    @Override
+    public TextBuilder<BaseComponent> keybind(final String key) {
+        builder.append(new KeybindComponent(key), BungeeComponentBuilder.FormatRetention.NONE);
+        return this;
+    }
+
+    @Override
+    public TextBuilder<BaseComponent> score(final String scoreboardName, final String objective) {
+        builder.append(new ScoreComponent(scoreboardName, objective));
+        return this;
+    }
+
+    @Override
+    public TextBuilder<BaseComponent> selector(final String selector) {
+        builder.append(new SelectorComponent(selector), BungeeComponentBuilder.FormatRetention.NONE);
+        return this;
+    }
+
+    public TextBuilder<BaseComponent> click(final ClickEvent.Action action, final String execution) {
+        builder.event(new ClickEvent(action, execution));
+        return this;
+    }
+
+    public TextBuilder<BaseComponent> hover(final HoverEvent.Action action, Content... content) {
+        builder.event(new HoverEvent(action, content));
         return this;
     }
 

@@ -20,4 +20,9 @@ class NamedColorTag extends AbstractColorTag {
     public Color getColor() {
         return this.color;
     }
+
+    @Override
+    public String toString() {
+        return "NamedColorTag(\"%s\")".formatted(this.namespace);
+    }
 }

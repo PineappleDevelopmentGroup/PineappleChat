@@ -9,17 +9,23 @@ import sh.miles.pineapple.chat.tag.base.complex.LazyTag;
 import java.util.Map;
 import java.util.Queue;
 
-class TranslationKeyTag extends AbstractTag implements LazyTag {
+class KeybindTag extends AbstractTag implements LazyTag {
 
     private final String key;
 
-    TranslationKeyTag(@NotNull final String namespace, @NotNull final Queue<String> arguments, final int childTextLength) {
+    KeybindTag(@NotNull final String namespace, @NotNull final Queue<String> arguments, final int childTextLength) {
         super(namespace, arguments, childTextLength);
         this.key = arguments.poll();
     }
 
     @Override
     public <R> void apply(@NotNull final TextBuilder<R> builder, @NotNull final PineappleParserContext<R> context, final Map<String, Object> replacements) {
-        builder.translation(this.key);
+        builder.keybind(this.key);
+    }
+
+    @Override
+    public String toString() {
+        return "KeybindTag(\"%s\")".formatted(this.key);
     }
 }
+

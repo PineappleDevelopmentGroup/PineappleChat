@@ -42,7 +42,8 @@ public final class ColorUtils {
 
     @Nullable
     public static Color getColor(@NotNull final String color) {
-        return colors.getOrDefault(color.toLowerCase(), Color.decode(color));
+        Color awtColor = colors.get(color.toLowerCase());
+        return awtColor == null ? Color.decode(color) : awtColor;
     }
 
     /**

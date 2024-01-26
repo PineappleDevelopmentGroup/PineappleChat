@@ -8,8 +8,9 @@ import sh.miles.pineapple.chat.node.BaseNodeParser;
 import sh.miles.pineapple.chat.node.RootNode;
 import sh.miles.pineapple.chat.node.TagNode;
 import sh.miles.pineapple.chat.node.TextNode;
-import sh.miles.pineapple.chat.tag.TagBuilder;
+import sh.miles.pineapple.chat.tag.TagFactory;
 import sh.miles.pineapple.chat.tag.base.AbstractTag;
+import sh.miles.pineapple.chat.tag.base.complex.LazyTag;
 import sh.miles.pineapple.chat.utils.StyleStack;
 
 import java.util.Map;
@@ -21,6 +22,8 @@ import java.util.Map;
  */
 public abstract class AbstractPineappleParserContext<R> implements PineappleParserContext<R> {
 
+    protected TagFactory tagFactory = new TagFactory();
+
     @Override
     public R parse(@NotNull final String text, @NotNull final Map<String, Object> replacements) {
         final RootNode root = BaseNodeParser.parseTree(text, replacements);
@@ -30,16 +33,14 @@ public abstract class AbstractPineappleParserContext<R> implements PineapplePars
     }
 
     private void parse(@NotNull final RootNode root, @NotNull final TextBuilder<R> builder, PineappleParserContext<R> context, @NotNull final Map<String, Object> replacements) {
-        StyleStack styleStack = newStyleStack();
-        parse(root, null, builder, context, replacements, styleStack);
-        styleStack.dump(builder, context, replacements);
+        parse(root, null, builder, context, replacements, newStyleStack());
     }
 
     private void parse(@NotNull final BaseNode root, @Nullable AbstractTag rootTag, @NotNull final TextBuilder<R> builder, PineappleParserContext<R> context, @NotNull final Map<String, Object> replacements, StyleStack styleStack) {
         for (final BaseNode child : root.getChildren()) {
             AbstractTag tag = null;
             if (child instanceof TagNode tagNode) {
-                styleStack.push((tag = TagBuilder.build(tagNode)));
+                styleStack.push((tag = tagFactory.create(tagNode)));
             }
 
             if (child instanceof TextNode textNode) {
@@ -51,6 +52,9 @@ public abstract class AbstractPineappleParserContext<R> implements PineapplePars
 
         if (rootTag != null) {
             styleStack.pop(rootTag);
+            if (rootTag instanceof LazyTag) {
+                styleStack.dump(builder, context, replacements);
+            }
         }
     }
 }

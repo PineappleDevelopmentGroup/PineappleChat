@@ -31,4 +31,9 @@ class GradientTag extends AbstractColorTag implements IteratingTag {
 
         index++;
     }
+
+    @Override
+    public String toString() {
+        return "GradientTag(\"%s\", \"%s\")".formatted("#" + Integer.toHexString(colors[0].getRGB()).substring(2), "#" + Integer.toHexString(colors[colors.length - 1].getRGB()).substring(2));
+    }
 }

@@ -2,6 +2,8 @@ package sh.miles.pineapple.chat.bungee.util;
 
 import org.jetbrains.annotations.NotNull;
 import sh.miles.pineapple.chat.builder.TextBuilder;
+import sh.miles.pineapple.chat.bungee.tag.ClickEventTag;
+import sh.miles.pineapple.chat.bungee.tag.HoverEventTag;
 import sh.miles.pineapple.chat.parse.PineappleParserContext;
 import sh.miles.pineapple.chat.tag.base.AbstractColorTag;
 import sh.miles.pineapple.chat.tag.base.AbstractDecorationTag;
@@ -20,6 +22,8 @@ public class BungeeStyleStack implements StyleStack {
 
     private final Deque<AbstractColorTag> colors = new ArrayDeque<>();
     private final Deque<AbstractDecorationTag> decorations = new ArrayDeque<>();
+    private final Deque<ClickEventTag> clicks = new ArrayDeque<>();
+    private final Deque<HoverEventTag> hovers = new ArrayDeque<>();
     private final Queue<AbstractTag> insertions = new ArrayDeque<>();
 
     @Override
@@ -28,6 +32,10 @@ public class BungeeStyleStack implements StyleStack {
             colors.push(act);
         } else if (tag instanceof AbstractDecorationTag adt) {
             decorations.push(adt);
+        } else if (tag instanceof ClickEventTag cet) {
+            clicks.push(cet);
+        } else if (tag instanceof HoverEventTag het) {
+            hovers.push(het);
         } else if (tag instanceof LazyTag) {
             insertions.add(tag);
         }
@@ -39,6 +47,10 @@ public class BungeeStyleStack implements StyleStack {
             colors.pop();
         } else if (tag instanceof AbstractDecorationTag) {
             decorations.pop();
+        } else if (tag instanceof ClickEventTag) {
+            clicks.pop();
+        } else if (tag instanceof HoverEventTag) {
+            hovers.pop();
         }
     }
 
@@ -59,9 +71,17 @@ public class BungeeStyleStack implements StyleStack {
 
     @Override
     public <R> void applySimple(@NotNull final TextBuilder<R> builder, @NotNull final PineappleParserContext<R> context, @NotNull final Map<String, Object> replacements) {
-        AbstractColorTag peek = colors.peek();
-        if (peek != null) {
-            peek.apply(builder, context, replacements);
+        final AbstractColorTag color = colors.peek();
+        if (color != null) {
+            color.apply(builder, context, replacements);
+        }
+        final ClickEventTag click = this.clicks.peek();
+        if (click != null) {
+            click.apply(builder, context, replacements);
+        }
+        final HoverEventTag hover = this.hovers.peek();
+        if (hover != null) {
+            hover.apply(builder, context, replacements);
         }
         decorations.descendingIterator().forEachRemaining(decoration -> decoration.apply(builder, context, replacements));
     }
@@ -69,7 +89,7 @@ public class BungeeStyleStack implements StyleStack {
     @Override
     public <R> void dump(@NotNull final TextBuilder<R> builder, @NotNull final PineappleParserContext<R> context, @NotNull final Map<String, Object> replacements) {
         final Iterator<AbstractTag> insertions = this.insertions.iterator();
-        while(insertions.hasNext()) {
+        while (insertions.hasNext()) {
             insertions.next().apply(builder, context, replacements);
             insertions.remove();
             applySimple(builder, context, replacements);

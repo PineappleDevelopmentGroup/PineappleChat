@@ -101,6 +101,31 @@ public interface TextBuilder<R> {
     TextBuilder<R> translation(String key);
 
     /**
+     * Appends a keybind into the next part
+     *
+     * @param key the key of the keybind
+     * @return the TextBuilder
+     */
+    TextBuilder<R> keybind(String key);
+
+    /**
+     * Appends a score into the next part
+     *
+     * @param scoreboardName the scoreboard name
+     * @param objective      the name of the objective to insert
+     * @return the TextBuilder
+     */
+    TextBuilder<R> score(String scoreboardName, String objective);
+
+    /**
+     * Appends a selector into the next part
+     *
+     * @param selector the selector
+     * @return the TextBuilder
+     */
+    TextBuilder<R> selector(String selector);
+
+    /**
      * Resets all formatting
      *
      * @return the TextBuilder

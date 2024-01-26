@@ -26,4 +26,9 @@ class NamedDecorationTag extends AbstractDecorationTag {
     public boolean getFlag() {
         return this.flag;
     }
+
+    @Override
+    public String toString() {
+        return "NamedDecorationTag(\"%s%s\")".formatted(this.decoration, this.flag ? "" : "!");
+    }
 }
