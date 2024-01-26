@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +46,10 @@ public final class ColorUtils {
     public static Color getColor(@NotNull final String color) {
         Color awtColor = colors.get(color.toLowerCase());
         return awtColor == null ? Color.decode(color) : awtColor;
+    }
+
+    public static Map<String, Color> getNamedColors() {
+        return new HashMap<>(colors);
     }
 
     /**

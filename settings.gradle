@@ -9,9 +9,11 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+        maven { url = 'https://oss.sonatype.org/content/repositories/central' }
     }
 }
 
 include 'pineapplechat-core'
 include 'pineapplechat-bungee'
+include 'pineapplechat-minecraft-legacy'
 
