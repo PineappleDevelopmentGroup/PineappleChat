@@ -16,6 +16,9 @@ public final class TagFactory {
 
     private final Trie<AbstractTagBuilder> tagTrie;
 
+    /**
+     * Creates a new tag factory
+     */
     public TagFactory() {
         final AbstractTagBuilder NAMED_COLOR = NamedColorTag::new;
         final AbstractTagBuilder NAMED_DECOR = NamedDecorationTag::new;

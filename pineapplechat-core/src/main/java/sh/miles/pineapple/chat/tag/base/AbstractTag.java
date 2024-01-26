@@ -16,6 +16,13 @@ public abstract class AbstractTag {
     protected final Queue<String> arguments;
     protected final int childTextLength;
 
+    /**
+     * Creates a new abstract tag
+     *
+     * @param namespace the namespace
+     * @param arguments the arguments
+     * @param childTextLength the child text length
+     */
     protected AbstractTag(@NotNull final String namespace, @NotNull final Queue<String> arguments, final int childTextLength) {
         this.namespace = namespace;
         this.arguments = arguments;

@@ -42,6 +42,7 @@ public class HoverEventTag extends AbstractTag {
                     final BaseComponent name = stringyName != null ? (BaseComponent) context.parse(dequote(stringyName), replacements) : null;
                     this.parsedContent = new Entity(id, uuid, name);
                 }
+                default -> throw new IllegalStateException("Fatal Error occurred no covered action found");
             }
         }
 

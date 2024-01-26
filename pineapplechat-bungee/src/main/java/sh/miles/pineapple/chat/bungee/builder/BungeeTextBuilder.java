@@ -11,7 +11,6 @@ import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import org.jetbrains.annotations.NotNull;
 import sh.miles.pineapple.chat.builder.TextBuilder;
-import sh.miles.pineapple.chat.bungee.tag.HoverEventTag;
 
 import java.awt.Color;
 import java.util.List;

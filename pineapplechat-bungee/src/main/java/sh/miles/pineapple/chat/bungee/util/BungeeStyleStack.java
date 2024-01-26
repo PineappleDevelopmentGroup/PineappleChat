@@ -5,19 +5,12 @@ import sh.miles.pineapple.chat.builder.TextBuilder;
 import sh.miles.pineapple.chat.bungee.tag.ClickEventTag;
 import sh.miles.pineapple.chat.bungee.tag.HoverEventTag;
 import sh.miles.pineapple.chat.parse.PineappleParserContext;
-import sh.miles.pineapple.chat.tag.base.AbstractColorTag;
-import sh.miles.pineapple.chat.tag.base.AbstractDecorationTag;
 import sh.miles.pineapple.chat.tag.base.AbstractTag;
-import sh.miles.pineapple.chat.tag.base.complex.IteratingTag;
-import sh.miles.pineapple.chat.tag.base.complex.LazyTag;
 import sh.miles.pineapple.chat.utils.AbstractStyleStack;
-import sh.miles.pineapple.chat.utils.StyleStack;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Queue;
 
 public class BungeeStyleStack extends AbstractStyleStack {
 

@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Special Trie Implementation. At the end of each Node their is a possible insertion for a type to be returned as an

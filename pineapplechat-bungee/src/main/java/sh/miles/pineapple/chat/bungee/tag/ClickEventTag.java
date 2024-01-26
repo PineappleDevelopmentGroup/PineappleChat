@@ -14,6 +14,14 @@ public class ClickEventTag extends AbstractTag {
 
     private final ClickEvent.Action action;
     private final String execution;
+
+    /**
+     * Creates a new ClickEventTag
+     *
+     * @param namespace the namespace
+     * @param arguments the arguments
+     * @param childTextLength the child text length
+     */
     public ClickEventTag(@NotNull final String namespace, @NotNull final Queue<String> arguments, final int childTextLength) {
         super(namespace, arguments, childTextLength);
         this.action = ClickEvent.Action.valueOf(arguments.poll().toUpperCase());
