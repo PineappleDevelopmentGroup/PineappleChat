@@ -1,12 +1,16 @@
 package sh.miles.pineapple.chat.token;
 
+import java.util.Map;
+
 /**
  * Tokenizer which works through a string and turns it into tokens
  */
 public class Tokenizer {
 
     private final String string;
+    private final int stringLength;
     private int cursor = 0;
+    private boolean startHasEscape;
 
     /**
      * Creates a new Tokenizer
@@ -15,79 +19,79 @@ public class Tokenizer {
      */
     public Tokenizer(String string) {
         this.string = string;
+        this.stringLength = string.length();
     }
 
     public boolean hasNext() {
         return this.cursor < string.length();
     }
 
-    /**
-     * @return the next token
-     */
     public Token next() {
-        boolean escaped = false;
         if (!hasNext()) {
             return null;
         }
 
-        char current;
         int lastTokenEnd = this.cursor;
-        int start = -1;
-        for (; cursor < string.length(); ++cursor) {
-            current = string.charAt(this.cursor);
-            if (current == TokenConstants.ESCAPE) {
-                escaped = true;
-                continue;
-            }
 
-            if (current == TokenConstants.OPEN && !escaped) {
-                start = cursor;
-                break;
-            }
+        char current;
+        int start = nextStart();
+        this.startHasEscape = start > 0 && this.string.charAt(start - 1) == TokenConstants.ESCAPE;
 
-            escaped = false;
-        }
-
-        if (this.cursor == string.length()) {
-            return new Token(lastTokenEnd, string.length(), TokenType.CONTENT);
+        if (this.cursor == this.stringLength) {
+            return new Token(lastTokenEnd, this.stringLength, TokenType.CONTENT);
         }
 
         if (start > lastTokenEnd) {
-            return new Token(lastTokenEnd, start, TokenType.CONTENT);
+            return new Token(lastTokenEnd, startHasEscape ? start - 1 : start, TokenType.CONTENT);
         }
 
-        int end = -1;
+        int end = nextEnd();
+
+        if (end == -1) {
+            throw new IllegalStateException("the token that started a capture at index %d never ended. Capturing: %s".formatted(start, string.substring(start)));
+        }
+
+        TokenType type;
+        current = string.charAt(start + 1);
+        if (this.startHasEscape) {
+            type = TokenType.ESCAPED;
+        } else if (current == TokenConstants.CLOSE_DENOTE) {
+            type = TokenType.CLOSE;
+        } else if (current == TokenConstants.REPLACE_DENOTE) {
+            type = TokenType.REPLACE;
+        } else {
+            type = TokenType.OPEN;
+        }
+
+        return new Token(start, end, type);
+    }
+
+    private int nextStart() {
+        for (; this.cursor < this.stringLength; ++this.cursor) {
+            if (this.string.charAt(this.cursor) == TokenConstants.OPEN) {
+                return cursor;
+            }
+        }
+        return -1;
+    }
+
+    private int nextEnd() {
         boolean quoteEscaped = false;
-        for (; cursor < string.length(); ++cursor) {
+        boolean escaped = false;
+        char current;
+        for (; cursor < stringLength; ++cursor) {
             current = string.charAt(this.cursor);
             if (current == TokenConstants.ESCAPE) {
                 escaped = !escaped;
             } else if (current == TokenConstants.QUOTE_ESCAPE && !escaped) {
                 quoteEscaped = !quoteEscaped;
             } else if (current == TokenConstants.CLOSE && !quoteEscaped && !escaped) {
-                end = cursor += 1;
-                break;
+                return cursor += 1;
             } else {
                 escaped = false;
             }
         }
 
-
-        if (end == -1) {
-            throw new IllegalStateException("the token that started a capture at index %d never ended. Capturing: %s".formatted(start, string.substring(start)));
-        }
-
-        TokenType tokenType;
-        current = string.charAt(start + 1);
-        if (current == TokenConstants.CLOSE_DENOTE) {
-            tokenType = TokenType.CLOSE;
-        } else if (current == TokenConstants.REPLACE_DENOTE) {
-            tokenType = TokenType.REPLACE;
-        } else {
-            tokenType = TokenType.OPEN;
-        }
-
-        return new Token(start, end, tokenType);
+        return -1;
     }
-
 }

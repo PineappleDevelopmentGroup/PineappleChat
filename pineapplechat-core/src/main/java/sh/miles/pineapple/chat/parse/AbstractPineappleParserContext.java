@@ -40,12 +40,8 @@ public abstract class AbstractPineappleParserContext<R> implements PineapplePars
         for (final BaseNode child : root.getChildren()) {
             AbstractTag tag = null;
             if (child instanceof TagNode tagNode) {
-                tag = tagFactory.create(tagNode);
-                System.out.println(tag);
-                styleStack.push(tag);
-            }
-
-            if (child instanceof TextNode textNode) {
+                styleStack.push((tag = tagFactory.create(tagNode)));
+            } else if (child instanceof TextNode textNode) {
                 styleStack.apply(textNode.getText(), builder, context, replacements);
             }
 

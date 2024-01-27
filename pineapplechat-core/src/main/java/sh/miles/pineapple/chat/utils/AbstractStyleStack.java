@@ -23,12 +23,16 @@ public abstract class AbstractStyleStack implements StyleStack {
 
     @Override
     public void push(@NotNull final AbstractTag tag) {
+        // returns not necessary slight optimization on inheritance
         if (tag instanceof AbstractColorTag act) {
             colors.push(act);
+            return;
         } else if (tag instanceof AbstractDecorationTag adt) {
             decorations.push(adt);
+            return;
         } else if (tag instanceof LazyTag) {
             insertions.add(tag);
+            return;
         }
     }
 

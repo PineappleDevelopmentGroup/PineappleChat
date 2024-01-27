@@ -30,7 +30,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void test_Should_Not_Find_Escaped_Toknes() {
+    public void test_Should_Not_Find_Escaped_Tokens() {
         String escapedAll = "<click:open_url:'<><><><>\'\'\'\'::::'>content \\<escaped>";
         final Tokenizer tokenizer = new Tokenizer(escapedAll);
 
@@ -40,6 +40,34 @@ public class TokenizerTest {
         }
 
         assertEquals(2, tokens.size());
+    }
+
+    @Test
+    public void test_Should_Yield_Escape_Tokens() {
+        final String escapedToken = "\\<red> And Content! <red> and token \\<blue>";
+        final Tokenizer tokenizer = new Tokenizer(escapedToken);
+
+        List<Token> tokens = new ArrayList<>();
+        while(tokenizer.hasNext()) {
+            Token token = tokenizer.next();
+            System.out.println(token);
+            System.out.println(token.detail(escapedToken));
+            if (token.tokenType() == TokenType.ESCAPED) {
+                tokens.add(token);
+            }
+        }
+
+        assertEquals(2, tokens.size());
+    }
+
+    public static void main(String[] args) {
+        String text = "<gray>Hello! Press <gold><bold><keybind:key.jump></gold> to jump";
+        Tokenizer tokenizer = new Tokenizer(text);
+        while (tokenizer.hasNext()) {
+            final Token token = tokenizer.next();
+            System.out.println(token);
+            System.out.println(token.detail(text));
+        }
     }
 
 }

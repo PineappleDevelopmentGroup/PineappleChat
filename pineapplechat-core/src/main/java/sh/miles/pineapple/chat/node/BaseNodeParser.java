@@ -34,7 +34,7 @@ public final class BaseNodeParser {
                 case OPEN, CLOSE -> current = new TagNode(parent, next, string);
                 case REPLACE ->
                         current = new TextNode(parent, next, string, replacements.getOrDefault(next.detail(string), "null").toString());
-                case CONTENT -> current = new TextNode(parent, next, string);
+                case ESCAPED, CONTENT -> current = new TextNode(parent, next, string);
                 default -> throw new IllegalStateException("the next TokenType can not be determined! This is a bug!");
             }
 

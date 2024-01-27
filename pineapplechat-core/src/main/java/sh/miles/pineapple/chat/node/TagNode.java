@@ -79,9 +79,14 @@ public class TagNode extends BaseNode {
     @Override
     protected StringBuilder asString(final @NotNull StringBuilder builder, final int depth) {
         String pad = pad(depth);
-        builder.append("\n").append(pad).append("TagNode(%d, %s, %s) {".formatted(this.fullChildTextLength, this.namespace, this.arguments));
+        builder.append("\n").append(pad).append("TagNode(%d, %s, %s)".formatted(this.fullChildTextLength, this.namespace, this.arguments));
+        if (!this.getChildren().isEmpty()) {
+            builder.append(" {");
+        }
         printChildren(builder, depth + 1);
-        builder.append("\n").append(pad).append("}");
+        if (!this.getChildren().isEmpty()) {
+            builder.append("\n").append(pad).append("}");
+        }
         return builder;
     }
 
