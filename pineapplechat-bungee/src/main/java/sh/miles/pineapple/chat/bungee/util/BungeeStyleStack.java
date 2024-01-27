@@ -29,7 +29,7 @@ public class BungeeStyleStack extends AbstractStyleStack {
 
     @Override
     public void pop(@NotNull final AbstractTag tag) {
-        super.push(tag);
+        super.pop(tag);
         if (tag instanceof ClickEventTag) {
             clicks.pop();
         } else if (tag instanceof HoverEventTag) {
