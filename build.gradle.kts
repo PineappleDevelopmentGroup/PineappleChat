@@ -43,7 +43,7 @@ subprojects {
             create<MavenPublication>("Maven") {
                 from(components["java"])
                 this.artifact(tasks.aggregateJavadocJar)
-                this.groupId = "sh.miles"
+                this.groupId = "sh.miles.pineapplechat"
                 this.artifactId = project.name
                 this.version = rootProject.version.toString()
             }
