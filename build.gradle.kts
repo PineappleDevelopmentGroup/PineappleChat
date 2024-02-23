@@ -36,6 +36,11 @@ subprojects {
     }
     
     tasks.aggregateJavadoc.get().options {
+        this.encoding = "UTF-8"
+    }
+
+    tasks.compileJava {
+        options.encoding = "UTF-8"
     }
 
     publishing {
